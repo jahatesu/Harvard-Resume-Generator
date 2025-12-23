@@ -18,9 +18,19 @@ function ResumePreview({ resumeData }) {
 
       {/* Education */}
       <section>
-        <h3>Education</h3>
-        {education.length === 0 && <p>No education added yet.</p>}
-      </section>
+    <h3>Education</h3>
+
+    {education.length === 0 && <p>No education added yet.</p>}
+
+    {education.map((edu, index) => (
+        <div key={index}>
+        <strong>{edu.degree}</strong> – {edu.institution}
+        <div>{edu.year}</div>
+        <p>{edu.description}</p>
+        </div>
+    ))}
+    </section>
+
 
       {/* Experience */}
       <section>

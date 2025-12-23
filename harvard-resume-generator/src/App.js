@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import initialResume from "./data/initialResume";
 import PersonalInfoForm from "./components/PersonalInfoForm";
 import ResumePreview from "./components/ResumePreview";
+import EducationForm from "./components/EducationForm";
 
 function App() {
   const [resumeData, setResumeData] = useState(initialResume);
@@ -16,6 +17,10 @@ function App() {
           setResumeData={setResumeData}
         />
       </div>
+      <EducationForm
+  education={resumeData.education}
+  setResumeData={setResumeData}
+/>
 
       {/* Right: Preview */}
       <div style={{ flex: 1 }}>
