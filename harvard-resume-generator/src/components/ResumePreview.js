@@ -1,7 +1,13 @@
 import React from "react";
 
 function ResumePreview({ resumeData }) {
-  const { personalInfo, education, experience, skills, projects } = resumeData;
+  const {
+    personalInfo,
+    education = [],
+    workExperience = [],
+    skills = [],
+    projects = [],
+  } = resumeData;
 
   return (
     <div style={{ padding: "20px", border: "1px solid #ccc" }}>
@@ -11,31 +17,36 @@ function ResumePreview({ resumeData }) {
         {personalInfo.email} | {personalInfo.phone} | {personalInfo.location}
       </p>
       <p>
-        {personalInfo.linkedin} {personalInfo.github && `| ${personalInfo.github}`}
+        {personalInfo.linkedin}
+        {personalInfo.github && ` | ${personalInfo.github}`}
       </p>
 
       <hr />
 
       {/* Education */}
       <section>
-    <h3>Education</h3>
+        <h3>Education</h3>
+        {education.length === 0 && <p>No education added yet.</p>}
+        {education.map((edu, index) => (
+          <div key={index}>
+            <strong>{edu.degree}</strong> – {edu.institution}
+            <div>{edu.year}</div>
+            <p>{edu.description}</p>
+          </div>
+        ))}
+      </section>
 
-    {education.length === 0 && <p>No education added yet.</p>}
-
-    {education.map((edu, index) => (
-        <div key={index}>
-        <strong>{edu.degree}</strong> – {edu.institution}
-        <div>{edu.year}</div>
-        <p>{edu.description}</p>
-        </div>
-    ))}
-    </section>
-
-
-      {/* Experience */}
+      {/* Work Experience */}
       <section>
-        <h3>Experience</h3>
-        {experience.length === 0 && <p>No experience added yet.</p>}
+        <h3>Work Experience</h3>
+        {workExperience.length === 0 && <p>No work experience added yet.</p>}
+        {workExperience.map((job, index) => (
+          <div key={index}>
+            <strong>{job.role}</strong> – {job.company}
+            <div>{job.duration}</div>
+            <p>{job.description}</p>
+          </div>
+        ))}
       </section>
 
       {/* Skills */}

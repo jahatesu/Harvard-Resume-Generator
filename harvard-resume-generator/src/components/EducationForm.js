@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 
 function EducationForm({ education, setResumeData }) {
-  const [edu, setEdu] = useState({
-    degree: "",
-    institution: "",
-    year: "",
-    description: ""
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEdu({ ...edu, [name]: value });
+  const handleChange = (index, field, value) => {
+    setResumeData(prev => {
+      const updated = [...prev.education];
+      updated[index][field] = value;
+      return { ...prev, education: updated };
+    });
   };
 
-  const addEducation = () => {
-    if (!edu.degree || !edu.institution) return;
-
-    setResumeData((prevData) => ({
-      ...prevData,
-      education: [...prevData.education, edu]
+  const handleAdd = () => {
+    setResumeData(prev => ({
+      ...prev,
+      education: [
+        ...prev.education,
+        { degree: "", institution: "", year: "", description: "" }
+      ]
     }));
+  };
 
-    setEdu({
-      degree: "",
-      institution: "",
-      year: "",
-      description: ""
+  const handleRemove = index => {
+    setResumeData(prev => {
+      const updated = [...prev.education];
+      updated.splice(index, 1);
+      return { ...prev, education: updated };
     });
   };
 
@@ -33,35 +31,33 @@ function EducationForm({ education, setResumeData }) {
     <div>
       <h2>Education</h2>
 
-      <input
-        name="degree"
-        placeholder="Degree"
-        value={edu.degree}
-        onChange={handleChange}
-      />
+      {education.map((edu, index) => (
+        <div key={index} style={{ marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px" }}>
+          <input
+            placeholder="Degree"
+            value={edu.degree}
+            onChange={e => handleChange(index, "degree", e.target.value)}
+          />
+          <input
+            placeholder="Institution"
+            value={edu.institution}
+            onChange={e => handleChange(index, "institution", e.target.value)}
+          />
+          <input
+            placeholder="Year"
+            value={edu.year}
+            onChange={e => handleChange(index, "year", e.target.value)}
+          />
+          <textarea
+            placeholder="Description"
+            value={edu.description}
+            onChange={e => handleChange(index, "description", e.target.value)}
+          />
+          <button type="button" onClick={() => handleRemove(index)}>Remove</button>
+        </div>
+      ))}
 
-      <input
-        name="institution"
-        placeholder="Institution"
-        value={edu.institution}
-        onChange={handleChange}
-      />
-
-      <input
-        name="year"
-        placeholder="Year"
-        value={edu.year}
-        onChange={handleChange}
-      />
-
-      <textarea
-        name="description"
-        placeholder="Achievements / Notes"
-        value={edu.description}
-        onChange={handleChange}
-      />
-
-      <button onClick={addEducation}>Add Education</button>
+      <button type="button" onClick={handleAdd}>Add Education</button>
     </div>
   );
 }

@@ -4,13 +4,22 @@ const initialResume = {
     email: "",
     phone: "",
     location: "",
-    linkedin: "",
-    github: ""
   },
-  education: [],
-  experience: [],
-  skills: [],
-  projects: []
+  education: [
+    {
+      school: "",
+      degree: "",
+      year: "",
+    },
+  ],
+  workExperience: [
+    {
+      company: "",
+      role: "",
+      duration: "",
+      description: "",
+    },
+  ],
 };
 
 export default initialResume;
