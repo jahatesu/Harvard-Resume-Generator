@@ -4,7 +4,10 @@ import initialResume from "./data/initialResume";
 import PersonalInfoForm from "./components/PersonalInfoForm";
 import EducationForm from "./components/EducationForm";
 import WorkExperienceForm from "./components/WorkExperienceForm";
+import SkillsForm from "./components/SkillsForm";
+import ProjectsForm from "./components/ProjectsForm";
 import ResumePreview from "./components/ResumePreview";
+import ExportButton from "./components/ExportButton";
 
 function App() {
   const [resumeData, setResumeData] = useState(initialResume);
@@ -29,6 +32,18 @@ function App() {
           workExperience={resumeData.workExperience}
           setResumeData={setResumeData}
         />
+
+        <SkillsForm
+          skills={resumeData.skills}
+          setResumeData={setResumeData}
+        />
+
+        <ProjectsForm
+          projects={resumeData.projects}
+          setResumeData={setResumeData}
+        />
+
+        <ExportButton resumeData={resumeData} />
       </div>
 
       {/* RIGHT SIDE: PREVIEW */}
