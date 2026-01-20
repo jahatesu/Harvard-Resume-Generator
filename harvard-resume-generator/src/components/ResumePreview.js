@@ -3,10 +3,10 @@ import React from "react";
 function ResumePreview({ resumeData }) {
   const {
     personalInfo,
-    education,
-    workExperience,
-    skills,
-    projects,
+    education = [],
+    workExperience = [],
+    skills = [],
+    projects = [],
   } = resumeData;
 
   return (
@@ -14,92 +14,120 @@ function ResumePreview({ resumeData }) {
       id="resume-preview"
       style={{
         fontFamily: "Times New Roman, serif",
-        fontSize: "12px",
-        lineHeight: "1.4",
+        fontSize: "11.5px",
+        lineHeight: "1.35",
         color: "#000",
         width: "8.5in",
         minHeight: "11in",
         padding: "0.75in",
-        backgroundColor: "white",
+        backgroundColor: "#fff",
       }}
     >
       {/* ===== HEADER ===== */}
-      <div style={{ textAlign: "center", marginBottom: "16px" }}>
-        <h1 style={{ fontSize: "20px", margin: 0 }}>
-          {personalInfo.fullName || "Your Name"}
-        </h1>
-        <p style={{ margin: "4px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: "12px" }}>
+        <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+          {personalInfo.fullName || "YOUR NAME"}
+        </div>
+
+        <div style={{ marginTop: "4px" }}>
           {personalInfo.email}
           {personalInfo.phone && ` | ${personalInfo.phone}`}
           {personalInfo.location && ` | ${personalInfo.location}`}
-        </p>
-        <p style={{ margin: 0 }}>
-          {personalInfo.linkedin}
-          {personalInfo.github && ` | ${personalInfo.github}`}
-        </p>
+        </div>
+
+        {(personalInfo.linkedin || personalInfo.github) && (
+          <div style={{ marginTop: "2px" }}>
+            {personalInfo.linkedin}
+            {personalInfo.github && ` | ${personalInfo.github}`}
+          </div>
+        )}
       </div>
 
       {/* ===== EDUCATION ===== */}
-      <section style={{ marginBottom: "16px" }}>
-        <h2 style={sectionTitle}>Education</h2>
-
+      <Section title="EDUCATION">
         {education.map((edu, index) => (
-          <div key={index} style={{ marginBottom: "8px" }}>
-            <strong>{edu.school}</strong>
-            <div>
-              {edu.degree}
-              {edu.year && `, ${edu.year}`}
+          <div key={index} style={{ marginBottom: "6px" }}>
+            <div style={rowBetween}>
+              <strong>{edu.school}</strong>
+              <span>{edu.year}</span>
             </div>
+            <div>{edu.degree}</div>
           </div>
         ))}
-      </section>
+      </Section>
 
       {/* ===== WORK EXPERIENCE ===== */}
-      <section style={{ marginBottom: "16px" }}>
-        <h2 style={sectionTitle}>Work Experience</h2>
-
+      <Section title="WORK EXPERIENCE">
         {workExperience.map((job, index) => (
-          <div key={index} style={{ marginBottom: "10px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div key={index} style={{ marginBottom: "8px" }}>
+            <div style={rowBetween}>
               <strong>{job.role}</strong>
               <span>{job.duration}</span>
             </div>
-            <div><em>{job.company}</em></div>
-            <p style={{ margin: "4px 0" }}>{job.description}</p>
+            <div style={{ fontStyle: "italic" }}>{job.company}</div>
+            {job.description && (
+              <ul style={bulletList}>
+                {job.description
+                  .split("\n")
+                  .filter(Boolean)
+                  .map((line, i) => (
+                    <li key={i}>{line}</li>
+                  ))}
+              </ul>
+            )}
           </div>
         ))}
-      </section>
+      </Section>
 
       {/* ===== SKILLS ===== */}
-      {skills && skills.length > 0 && (
-        <section style={{ marginBottom: "16px" }}>
-          <h2 style={sectionTitle}>Skills</h2>
-          <p>{skills.join(", ")}</p>
-        </section>
+      {skills.length > 0 && (
+        <Section title="SKILLS">
+          <div>{skills.join(", ")}</div>
+        </Section>
       )}
 
       {/* ===== PROJECTS ===== */}
-      {projects && projects.length > 0 && (
-        <section>
-          <h2 style={sectionTitle}>Projects</h2>
-
+      {projects.length > 0 && (
+        <Section title="PROJECTS">
           {projects.map((project, index) => (
-            <div key={index} style={{ marginBottom: "8px" }}>
+            <div key={index} style={{ marginBottom: "6px" }}>
               <strong>{project.title}</strong>
-              <p style={{ margin: "4px 0" }}>{project.description}</p>
+              <div>{project.description}</div>
             </div>
           ))}
-        </section>
+        </Section>
       )}
     </div>
   );
 }
 
+/* ===== REUSABLE STYLES ===== */
+
+function Section({ title, children }) {
+  return (
+    <section style={{ marginBottom: "12px" }}>
+      <div style={sectionTitle}>{title}</div>
+      {children}
+    </section>
+  );
+}
+
 const sectionTitle = {
-  fontSize: "14px",
+  fontSize: "12px",
   fontWeight: "bold",
   borderBottom: "1px solid #000",
-  marginBottom: "8px",
+  paddingBottom: "2px",
+  marginBottom: "6px",
+};
+
+const rowBetween = {
+  display: "flex",
+  justifyContent: "space-between",
+};
+
+const bulletList = {
+  margin: "4px 0 0 16px",
+  padding: 0,
 };
 
 export default ResumePreview;

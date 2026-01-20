@@ -1,85 +1,97 @@
 import React from "react";
 
+const cardStyle = {
+  border: "1px solid #ccc",
+  padding: "30px",
+  marginBottom: "16px",
+  borderRadius: "10px",
+  background: "#fafafa",
+  maxWidth: "500px",  
+  margin: "0 auto 20px auto",   
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "5px",
+  marginBottom: "8px",
+  borderRadius: "10px",
+  fontSize: "14px",
+};
+
+const labelStyle = {
+  fontWeight: "bold",
+  fontSize: "13px",
+  marginBottom: "4px",
+  display: "block",
+};
+
 function WorkExperienceForm({ workExperience, setResumeData }) {
   const handleChange = (index, field, value) => {
     setResumeData(prev => {
       const updated = [...prev.workExperience];
-      updated[index] = {
-        ...updated[index],
-        [field]: value,
-      };
+      updated[index][field] = value;
       return { ...prev, workExperience: updated };
     });
   };
 
-  const addWorkExperience = () => {
+  const addJob = () => {
     setResumeData(prev => ({
       ...prev,
       workExperience: [
         ...prev.workExperience,
-        {
-          company: "",
-          role: "",
-          duration: "",
-          description: "",
-        },
+        { company: "", role: "", duration: "", description: "" },
       ],
     }));
   };
 
-  const removeWorkExperience = (index) => {
-    setResumeData(prev => {
-      const updated = prev.workExperience.filter((_, i) => i !== index);
-      return { ...prev, workExperience: updated };
-    });
+  const removeJob = index => {
+    setResumeData(prev => ({
+      ...prev,
+      workExperience: prev.workExperience.filter((_, i) => i !== index),
+    }));
   };
 
   return (
-    <div>
+    <div style={cardStyle}>
       <h2>Work Experience</h2>
 
-      {workExperience.length === 0 && (
-        <p>No work experience added yet.</p>
-      )}
-
       {workExperience.map((job, index) => (
-        <div
-          key={index}
-          style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}
-        >
+        <div key={index} style={{ marginBottom: "16px" }}>
+          <label style={labelStyle}>Role</label>
           <input
-            placeholder="Company"
-            value={job.company}
-            onChange={e => handleChange(index, "company", e.target.value)}
-          />
-
-          <input
-            placeholder="Role"
+            style={inputStyle}
             value={job.role}
             onChange={e => handleChange(index, "role", e.target.value)}
           />
 
+          <label style={labelStyle}>Company</label>
           <input
-            placeholder="Duration"
+            style={inputStyle}
+            value={job.company}
+            onChange={e => handleChange(index, "company", e.target.value)}
+          />
+
+          <label style={labelStyle}>Duration</label>
+          <input
+            style={inputStyle}
             value={job.duration}
             onChange={e => handleChange(index, "duration", e.target.value)}
           />
 
+          <label style={labelStyle}>
+            Description (one bullet per line)
+          </label>
           <textarea
-            placeholder="Description"
+            style={{ ...inputStyle, height: "80px" }}
             value={job.description}
             onChange={e => handleChange(index, "description", e.target.value)}
           />
 
-          <button onClick={() => removeWorkExperience(index)}>
-            Remove
-          </button>
+          <button onClick={() => removeJob(index)}>Remove</button>
         </div>
       ))}
 
-      <button onClick={addWorkExperience}>
-        + Add Work Experience
-      </button>
+      <button onClick={addJob}>+ Add Experience</button>
     </div>
   );
 }
