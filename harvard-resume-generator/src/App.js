@@ -67,6 +67,7 @@ function App() {
         return (
           <SkillsForm
             skills={resumeData.skills}
+            interests={resumeData.interests}
             setResumeData={setResumeData}
           />
         );
