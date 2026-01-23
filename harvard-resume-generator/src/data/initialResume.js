@@ -68,6 +68,16 @@ const initialResume = {
       ]
     }
   ],
+
+  certifications: [
+  {
+    name: "",
+    issuer: "",
+    date: "",
+    url: ""
+  }
+]
+
 };
 
 export default initialResume;

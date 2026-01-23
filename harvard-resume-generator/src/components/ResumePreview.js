@@ -193,6 +193,8 @@ function ResumePreview({ resumeData }) {
         </Section>
       )}
 
+      
+
       {/* ===== PROJECTS ===== */}
       {projects.length > 0 && (
   <Section title="PROJECTS">
@@ -226,7 +228,28 @@ function ResumePreview({ resumeData }) {
     ))}
   </Section>
 )}
-    </div>
+
+{resumeData.certifications && resumeData.certifications.length > 0 && (
+  <Section title="CERTIFICATIONS">
+    {resumeData.certifications.map((cert, index) => (
+      <div key={index} style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "11px" }}>
+        <div>
+          <strong>{cert.issuer}</strong>: 
+          <a 
+            href={cert.url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ color: "black", textDecoration: "none", marginLeft: "4px" }}
+          >
+            {cert.name} <span style={{ fontSize: "9px" }}>↗</span>
+          </a>
+        </div>
+        <span>{cert.date}</span>
+      </div>
+    ))}
+  </Section>
+)}
+      </div>
   );
 }
 
