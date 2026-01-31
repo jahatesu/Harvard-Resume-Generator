@@ -201,3 +201,41 @@ body {
   cursor: pointer;
   margin-top: 24px;
 }
+
+.creator-credit {
+  margin-top: 15px;
+  font-size: 11px;
+  text-align: center;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.creator-credit a {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.creator-credit a:hover {
+  border-bottom: 1px solid #1a1a1a;
+}
+
+/* Floating Glass Watermark (Website Only) */
+.preview-watermark-overlay {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}

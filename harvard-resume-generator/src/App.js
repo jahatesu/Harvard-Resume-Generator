@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import initialResume from "./data/initialResume";
 import PersonalInfoForm from "./components/PersonalInfoForm";
@@ -6,13 +6,28 @@ import EducationForm from "./components/EducationForm";
 import WorkExperienceForm from "./components/WorkExperienceForm";
 import SkillsForm from "./components/SkillsForm";
 import ProjectsForm from "./components/ProjectsForm";
-import CertificationsForm from "./components/CertificationsForm"; // Added Import
+import CertificationsForm from "./components/CertificationsForm";
 import ResumePreview from "./components/ResumePreview";
 import "./App.css";
 
 function App() {
   const [step, setStep] = useState(1);
   const [resumeData, setResumeData] = useState(initialResume);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("resume_draft");
+    if (savedData) {
+      try {
+        setResumeData(JSON.parse(savedData));
+      } catch (e) {
+        console.error("Failed to parse local storage data", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("resume_draft", JSON.stringify(resumeData));
+  }, [resumeData]);
 
   const nextStep = () => setStep(prev => Math.min(prev + 1, 7));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
@@ -44,7 +59,7 @@ function App() {
         return (
           <div className="download-section">
             <div className="success-icon">✓</div>
-            <h3>Resume Complete</h3>
+            <h3>Resume Complete!</h3>
             <p className="download-description">
               Your professional resume is ready. Review the live preview and download your high-resolution PDF below.
             </p>
@@ -58,7 +73,6 @@ function App() {
   };
 
   const Stepper = () => {
-    // Added "Certifications" to the array
     const steps = ["General", "Education", "Work", "Skills", "Projects", "Certifications", "Finish"];
     return (
       <div className="stepper-wrapper">
@@ -95,6 +109,11 @@ function App() {
           <div className="progress-mini">
             <div className="progress-fill" style={{ width: `${(step / 7) * 100}%` }}></div>
           </div>
+          
+          {/* Creator Credit Link */}
+          <div className="creator-credit">
+            Created by <a href="www.linkedin.com/in/janna-justiniano" target="_blank" rel="noopener noreferrer">Janna Justiniano</a>
+          </div>
         </footer>
       </aside>
 
@@ -104,7 +123,12 @@ function App() {
           <span className="preview-filename">{resumeData.personalInfo.fullName || "Untitled"}.pdf</span>
         </div>
         <div className="document-canvas">
-          <div className="page-sheet">
+          {/* Subtle UI-only Watermark */}
+          <div className="preview-watermark-overlay">
+            Harvarded by Janna Justiniano.
+          </div>
+          
+          <div className="page-sheet" id="resume-preview">
             <ResumePreview resumeData={resumeData} />
           </div>
         </div>

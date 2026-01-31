@@ -5,8 +5,8 @@ const cardStyle = {
   padding: "30px",
   borderRadius: "10px",
   background: "#fafafa",
-  maxWidth: "500px",  
-  margin: "0 auto 20px auto",   
+  maxWidth: "500px",
+  margin: "0 auto 20px auto",
 };
 
 const inputStyle = {
@@ -37,7 +37,7 @@ const actionButtonStyle = {
   marginTop: "5px"
 };
 
-function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
+function WorkExperienceForm({ workExperience, setResumeData }) {
   
   const handleChange = (index, field, value) => {
     setResumeData(prev => {
@@ -64,12 +64,16 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
     }));
   };
 
-  // Validation: Check if mandatory fields for existing jobs are filled
+  /**
+   * FIXED VALIDATION: 
+   * We use (job.field || "") to ensure that even if a field is missing 
+   * in the user's LocalStorage, the app won't crash on .trim().
+   */
   const canProceed = workExperience.length > 0 && workExperience.every(job => 
-    job.role.trim() !== "" && 
-    job.company.trim() !== "" && 
-    job.location.trim() !== "" &&
-    job.duration.trim() !== ""
+    (job.role || "").trim() !== "" && 
+    (job.company || "").trim() !== "" && 
+    (job.location || "").trim() !== "" &&
+    (job.duration || "").trim() !== ""
   );
 
   return (
@@ -90,7 +94,7 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
           <input
             style={inputStyle}
             placeholder="e.g. Investment Banking Analyst"
-            value={job.role}
+            value={job.role || ""}
             onChange={e => handleChange(index, "role", e.target.value)}
           />
 
@@ -98,7 +102,7 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
           <input
             style={inputStyle}
             placeholder="e.g. Goldman Sachs"
-            value={job.company}
+            value={job.company || ""}
             onChange={e => handleChange(index, "company", e.target.value)}
           />
 
@@ -106,7 +110,7 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
           <input
             style={inputStyle}
             placeholder="e.g. New York, NY"
-            value={job.location}
+            value={job.location || ""}
             onChange={e => handleChange(index, "location", e.target.value)}
           />
 
@@ -114,7 +118,7 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
           <input
             style={inputStyle}
             placeholder="e.g. June 2021 – Present"
-            value={job.duration}
+            value={job.duration || ""}
             onChange={e => handleChange(index, "duration", e.target.value)}
           />
 
@@ -124,7 +128,7 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
           <textarea
             style={{ ...inputStyle, height: "100px", resize: "vertical" }}
             placeholder="• Led a team of 5 to optimize supply chain costs...&#10;• Developed a new financial model that..."
-            value={job.description}
+            value={job.description || ""}
             onChange={e => handleChange(index, "description", e.target.value)}
           />
 
@@ -146,8 +150,6 @@ function WorkExperienceForm({ workExperience, setResumeData, onNext, onBack }) {
         + Add Another Experience
       </button>
 
-      <div style={{ display: "flex", gap: "10px" }}>
-      </div>
     </div>
   );
 }

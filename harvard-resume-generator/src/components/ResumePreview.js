@@ -1,6 +1,6 @@
 import React from "react";
 
-/* ===== REUSABLE STYLES (Moved to top) ===== */
+/* ===== REUSABLE STYLES ===== */
 const sectionTitleStyle = {
   fontSize: "12px",
   fontWeight: "bold",
@@ -14,6 +14,12 @@ const rowBetween = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "baseline",
+};
+
+const linkStyle = {
+  textDecoration: "none",
+  color: "#2E5894",
+  cursor: "pointer",
 };
 
 /* ===== SUB-COMPONENT ===== */
@@ -35,23 +41,20 @@ function ResumePreview({ resumeData }) {
     skills = [],
     projects = [],
     interests = "",
+    certifications = []
   } = resumeData;
 
-  // Helpers for clickable links
+  /* ===== HELPERS ===== */
+  // Ensures links are absolute (prevents redirecting to local repository)
   const formatUrl = (url) => {
     if (!url) return "";
-    return url.startsWith("http") ? url : `https://${url}`;
+    return /^https?:\/\//i.test(url) ? url : `https://${url}`;
   };
 
+  // Cleans URL for display (removes https:// and trailing slashes)
   const displayUrl = (url) => {
     if (!url) return "";
     return url.replace(/^(https?:\/\/)?(www\.)?/, "").replace(/\/$/, "");
-  };
-
-  const linkStyle = {
-    textDecoration: "none",
-    color: "#2E5894",
-    cursor: "pointer",
   };
 
   return (
@@ -67,8 +70,8 @@ function ResumePreview({ resumeData }) {
         padding: "0.75in",
         backgroundColor: "#fff",
         margin: "0 auto",
-        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
         boxSizing: "border-box",
+        textAlign: "left"
       }}
     >
       {/* ===== HEADER ===== */}
@@ -113,66 +116,100 @@ function ResumePreview({ resumeData }) {
       </div>
 
       {/* ===== EDUCATION ===== */}
-      <Section title="EDUCATION">
-        {education.map((edu, index) => (
-          <div key={index} style={{ marginBottom: "10px" }}>
-            <div style={rowBetween}>
-              <strong style={{ textTransform: "uppercase", fontSize: "11.5px" }}>
-                {edu.school || "University Name"}
-              </strong>
-              <strong style={{ fontSize: "11px" }}>
-                {edu.location || "City, State"}
-              </strong>
+      {education.length > 0 && (
+        <Section title="EDUCATION">
+          {education.map((edu, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <div style={rowBetween}>
+                <strong style={{ textTransform: "uppercase", fontSize: "11.5px" }}>
+                  {edu.school || "University Name"}
+                </strong>
+                <strong style={{ fontSize: "11px" }}>
+                  {edu.location || "City, State"}
+                </strong>
+              </div>
+              <div style={rowBetween}>
+                <div style={{ fontStyle: "italic", fontSize: "11px" }}>
+                  {edu.degree || "Degree Name"}
+                  {edu.gpa && `, GPA: ${edu.gpa}`}
+                </div>
+                <div style={{ fontSize: "11px" }}>
+                  {edu.graduation_date || "Date"}
+                </div>
+              </div>
+              {edu.honors_awards && (
+                <div style={{ fontSize: "10.5px", marginTop: "1px" }}>
+                  <span style={{ fontStyle: "italic" }}>Honors: </span>{edu.honors_awards}
+                </div>
+              )}
+              {edu.relevant_coursework && (
+                <div style={{ fontSize: "10.5px", marginTop: "1px" }}>
+                  <span style={{ fontStyle: "italic" }}>Coursework: </span>{edu.relevant_coursework}
+                </div>
+              )}
             </div>
-            <div style={rowBetween}>
-              <div style={{ fontStyle: "italic", fontSize: "11px" }}>
-                {edu.degree || "Degree Name"}
-                {edu.gpa && `, GPA: ${edu.gpa}`}
-              </div>
-              <div style={{ fontSize: "11px" }}>
-                {edu.graduation_date || "Date"}
-              </div>
-            </div>
-            {edu.honors_awards && (
-              <div style={{ fontSize: "10.5px", marginTop: "1px" }}>
-                <span style={{ fontStyle: "italic" }}>Honors: </span>{edu.honors_awards}
-              </div>
-            )}
-            {edu.relevant_coursework && (
-              <div style={{ fontSize: "10.5px", marginTop: "1px" }}>
-                <span style={{ fontStyle: "italic" }}>Coursework: </span>{edu.relevant_coursework}
-              </div>
-            )}
-          </div>
-        ))}
-      </Section>
+          ))}
+        </Section>
+      )}
 
       {/* ===== WORK EXPERIENCE ===== */}
-      <Section title="EXPERIENCE">
-        {workExperience.map((job, index) => (
-          <div key={index} style={{ marginBottom: "12px" }}>
-            <div style={rowBetween}>
-              <strong style={{ fontSize: "11.5px" }}>{job.company}</strong>
-              <strong style={{ fontSize: "11px" }}>{job.location}</strong>
+      {workExperience.length > 0 && (
+        <Section title="EXPERIENCE">
+          {workExperience.map((job, index) => (
+            <div key={index} style={{ marginBottom: "12px" }}>
+              <div style={rowBetween}>
+                <strong style={{ fontSize: "11.5px" }}>{job.company}</strong>
+                <strong style={{ fontSize: "11px" }}>{job.location}</strong>
+              </div>
+              <div style={rowBetween}>
+                <div style={{ fontStyle: "italic", fontSize: "11px" }}>{job.role}</div>
+                <div style={{ fontSize: "11px" }}>{job.duration}</div>
+              </div>
+              {job.description && (
+                <ul style={{ margin: "2px 0 0 20px", padding: 0, listStyleType: "disc", fontSize: "10.5px" }}>
+                  {job.description.split("\n").filter(Boolean).map((line, i) => (
+                    <li key={i} style={{ marginBottom: "1px" }}>
+                      {line.trim().replace(/^[•\-\*]\s*/, "")}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-            <div style={rowBetween}>
-              <div style={{ fontStyle: "italic", fontSize: "11px" }}>{job.role}</div>
-              <div style={{ fontSize: "11px" }}>{job.duration}</div>
-            </div>
-            {job.description && (
-              <ul style={{ margin: "2px 0 0 20px", padding: 0, listStyleType: "disc", fontSize: "10.5px" }}>
-                {job.description.split("\n").filter(Boolean).map((line, i) => (
-                  <li key={i} style={{ marginBottom: "1px" }}>
-                    {line.trim().replace(/^[•\-\*]\s*/, "")}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </Section>
+          ))}
+        </Section>
+      )}
 
-            {/* ===== SKILLS & INTERESTS ===== */}
+      {/* ===== PROJECTS ===== */}
+      {projects.length > 0 && (
+        <Section title="PROJECTS">
+          {projects.map((project, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <div style={rowBetween}>
+                <div>
+                  <strong style={{ fontSize: "11.5px" }}>{project.title}</strong>
+                  {project.technologies && (
+                    <span style={{ fontSize: "10.5px", fontStyle: "italic", marginLeft: "8px" }}>
+                      | {project.technologies}
+                    </span>
+                  )}
+                </div>
+                <span style={{ fontSize: "11px" }}>{project.date}</span>
+              </div>
+              {project.description && (
+                <ul style={{ margin: "2px 0 0 20px", padding: 0, listStyleType: "disc", fontSize: "10.5px" }}>
+                  {project.description.split("\n").filter(Boolean).map((line, i) => (
+                    <li key={i} style={{ marginBottom: "1px" }}>
+                      {line.trim().replace(/^[•\-\*]\s*/, "")}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </Section>
+      )}
+
+      {/* ===== SKILLS & INTERESTS ===== */}
       {(skills.length > 0 || interests) && (
         <Section title="SKILLS & INTERESTS">
           <div style={{ fontSize: "10.5px", lineHeight: "1.3" }}>
@@ -193,63 +230,28 @@ function ResumePreview({ resumeData }) {
         </Section>
       )}
 
-      
-
-      {/* ===== PROJECTS ===== */}
-      {projects.length > 0 && (
-  <Section title="PROJECTS">
-    {projects.map((project, index) => (
-      <div key={index} style={{ marginBottom: "10px" }}>
-        {/* Title and Date Row */}
-        <div style={rowBetween}>
-          <div>
-            <strong style={{ fontSize: "11.5px" }}>{project.title}</strong>
-            {/* Added Technologies here */}
-            {project.technologies && (
-              <span style={{ fontSize: "10.5px", fontStyle: "italic", marginLeft: "8px" }}>
-                | {project.technologies}
-              </span>
-            )}
-          </div>
-          <span style={{ fontSize: "11px" }}>{project.date}</span>
-        </div>
-
-        {/* Bullet Points */}
-        {project.description && (
-          <ul style={{ margin: "2px 0 0 20px", padding: 0, listStyleType: "disc", fontSize: "10.5px" }}>
-            {project.description.split("\n").filter(Boolean).map((line, i) => (
-              <li key={i} style={{ marginBottom: "1px" }}>
-                {line.trim().replace(/^[•\-\*]\s*/, "")}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    ))}
-  </Section>
-)}
-
-{resumeData.certifications && resumeData.certifications.length > 0 && (
-  <Section title="CERTIFICATIONS">
-    {resumeData.certifications.map((cert, index) => (
-      <div key={index} style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "11px" }}>
-        <div>
-          <strong>{cert.issuer}</strong>: 
-          <a 
-            href={cert.url} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            style={{ color: "black", textDecoration: "none", marginLeft: "4px" }}
-          >
-            {cert.name} <span style={{ fontSize: "9px" }}>↗</span>
-          </a>
-        </div>
-        <span>{cert.date}</span>
-      </div>
-    ))}
-  </Section>
-)}
-      </div>
+      {/* ===== CERTIFICATIONS ===== */}
+      {certifications.length > 0 && (
+        <Section title="CERTIFICATIONS">
+          {certifications.map((cert, index) => (
+            <div key={index} style={{ ...rowBetween, marginBottom: "4px", fontSize: "11px" }}>
+              <div>
+                <strong>{cert.issuer}</strong>: 
+                <a 
+                  href={formatUrl(cert.url)} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ color: "#000", textDecoration: "none", marginLeft: "4px", fontWeight: "normal" }}
+                >
+                  {cert.name} <span style={{ fontSize: "9px", verticalAlign: "middle" }}>↗</span>
+                </a>
+              </div>
+              <span>{cert.date}</span>
+            </div>
+          ))}
+        </Section>
+      )}
+    </div>
   );
 }
 
